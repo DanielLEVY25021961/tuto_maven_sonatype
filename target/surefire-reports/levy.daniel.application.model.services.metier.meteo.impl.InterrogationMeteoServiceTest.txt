@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: levy.daniel.application.model.services.metier.meteo.impl.InterrogationMeteoServiceTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.043 s - in levy.daniel.application.model.services.metier.meteo.impl.InterrogationMeteoServiceTest

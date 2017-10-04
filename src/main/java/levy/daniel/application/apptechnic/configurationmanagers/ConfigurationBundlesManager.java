@@ -441,6 +441,31 @@ public final class ConfigurationBundlesManager {
 	
 	
 	/**
+	 * method getClePathRessourcesExternes() :<br/>
+	 * <ul>
+	 * <li>Fournit la clé du path des ressources <b>EXTERNES</b> 
+	 * (hors classpath) paramétrables par la MOA.</li>
+	 * <li>Cette clé est stockée dans 
+	 * <b>'configuration_ressourcs_externes.properties'</b> 
+	 * sous la racine.</li>
+	 * <li>Le path des ressources externes n'est accessible 
+	 * qu'au centre-serveur et doit être écrit en dur dans le properties. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/ressources_externes'</li>
+	 * <li>clé = "ressourcesexternes".</li>
+	 * </ul>
+	 *
+	 * @return : String : "ressourcesexternes".<br/>
+	 */
+	private static String getClePathRessourcesExternes() {
+		
+			return "ressourcesexternes";
+	
+	} // Fin de getClePathRessourcesExternes().____________________________
+	
+	
+	
+	/**
 	 * method getBundleInterne(
 	 * String pNomBaseProperties
 	 * , Locale pLocale) :<br/>

@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 import levy.daniel.application.apptechnic.configurationmanagers.ConfigurationBundlesManager;
 import levy.daniel.application.apptechnic.exceptions.technical.impl.BundleManquantRunTimeException;
+import levy.daniel.application.apptechnic.exceptions.technical.impl.CleManquanteRunTimeException;
 
 /**
  * class ConfigurationApplicationManager :<br/>
@@ -322,7 +323,59 @@ public final class ConfigurationApplicationManager {
 	} // Fin de getBundleRessourcesExternes().____________________________________
 	
 
+	
+	/**
+	 * method getPathRessourcesExternes() :<br/>
+	 * <ul>
+	 * <li>Fournit le path des ressources <b>EXTERNES</b> 
+	 * (hors classpath) paramétrables par la MOA.</li>
+	 * <li>Le path des ressources externes n'est accessible 
+	 * qu'au centre-serveur et doit être écrit en dur dans 
+	 * le properties 'configuration_ressources_externes.properties'. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/ressources_externes'</li>
+	 * <li>clé = "ressourcesexternes".</li>
+	 * </ul>
+	 *
+	 * @return : String : path vers les ressources externes.<br/>
+	 * 
+	 * @throws Exception : BundleManquantRunTimeException 
+	 * si le properties est introuvable.<br/>
+	 */
+	public static String getPathRessourcesExternes() throws Exception {
+		
+		/* Bloc synchronized. */
+		synchronized (ConfigurationApplicationManager.class) {
+			
+			
+			String pathRessourcesExternes = null;
+			
+			try {
+				
+				pathRessourcesExternes 
+					= ConfigurationBundlesManager
+						.getPathRessourcesExternes();
+				
+			}
+			catch (BundleManquantRunTimeException bundleManquantExc) {
+				
+				traiterException(bundleManquantExc);
+				
+			}
+			catch (CleManquanteRunTimeException cleManquanteExc) {
+				
+				traiterCleManquanteException(cleManquanteExc);
+				
+			}
+			
+			return pathRessourcesExternes;
+			
+		} // Fin de synchronized.__________________________________
+		
+	} // Fin de getPathRessourcesExternes()._______________________________
+	
 
+	
 	/**
 	 * method getBundleMessagesControle() :<br/>
 	 * <ul>
@@ -749,5 +802,60 @@ public final class ConfigurationApplicationManager {
 	} // Fin de traiterException(...)._____________________________________
 	
 
+	
+	/**
+	 * method traiterCleManquanteException() :<br/>
+	 * <ul>
+	 * <li>récupère le rapport de configuration csv produit 
+	 * par le ConfigurationBundlesManager en cas d'Exception.</li>
+	 * <li>ajoute ce rapport à 'rapportConfigutrationCsv'.</li>
+	 * <li>récupère le rapport utilisateur csv produit 
+	 * par le ConfigurationBundlesManager en cas d'Exception.</li>
+	 * <li>ajoute ce rapport à 'rapportUtilisateurCsv'.</li>
+	 * <li>Jette une CleManquanteRunTimeException 
+	 * qui encapsule PE.</li>
+	 * </ul>
+	 *
+	 * @param pE : Exception.<br/>
+	 * 
+	 * @throws CleManquanteRunTimeException
+	 */
+	private static void traiterCleManquanteException(
+			final Exception pE) 
+					throws CleManquanteRunTimeException {
+		
+		/* Récupération du message de rapport 
+		 * de configuration éventuel. */
+		final String messageRapport 
+			= ConfigurationBundlesManager
+				.getMessageIndividuelRapport();
+		
+		/* Récupération du message de rapport 
+		 * utilisateur éventuel. */
+		final String messageUtilisateur 
+		= ConfigurationBundlesManager.getRapportUtilisateurCsv();
+		
+		/* Ajout du message de rapport éventuel 
+		 * au rapportConfigurationCsv. */
+		if (!StringUtils.isBlank(messageRapport)) {
+			ajouterMessageAuRapportConfigurationCsv(
+					messageRapport);
+		}
+		
+		/* Ajout du message de rapport éventuel 
+		 * au rapportUtilisateurCsv. */
+		if (!StringUtils.isBlank(messageUtilisateur)) {
+			ajouterMessageAuRapportUtilisateurCsv(
+					messageUtilisateur);
+		}
+					
+		/* Jette une CleManquanteRunTimeException 
+		 * si le properties est manquant. */
+		throw new CleManquanteRunTimeException(
+				messageRapport, pE);
+		
+	} // Fin de traiterCleManquanteException(...).________________________-
+	
+	
 	
 } // FIN DE LA CLASSE ConfigurationApplicationManager.-----------------------

@@ -452,7 +452,8 @@ public final class ConfigurationBundlesManager {
 			if (bundleRessourcesExternes == null) {
 								
 				bundleRessourcesExternes 
-					= getBundleInterne(getNomBasePropertiesRessourcesExternes()
+					= getBundleInterne(
+							getNomBasePropertiesRessourcesExternes()
 							, LocaleManager.getLocaleApplication());
 				
 			} // Fin de if (bundleRessourcesExternes == null).__________
@@ -496,8 +497,10 @@ public final class ConfigurationBundlesManager {
 	 *
 	 * @return : String : path vers les ressources externes.<br/>
 	 * 
-	 * @throws Exception : BundleManquantRunTimeException 
+	 * @throws Exception : 
+	 * - BundleManquantRunTimeException 
 	 * si le properties est introuvable.<br/>
+	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
 	 */
 	public static String getPathRessourcesExternes() throws Exception {
 		

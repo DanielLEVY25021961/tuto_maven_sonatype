@@ -36,42 +36,42 @@ public class Meteo {
 
 	/**
 	 * region : String :<br/>
-	 * Région.<br/>
+	 * Région de la ville (Ile de France, ...).<br/>
 	 */
 	private String region;
 
 
 	/**
 	 * country : String :<br/>
-	 * Pays.<br/>
+	 * Pays de la ville.<br/>
 	 */
 	private String country;
 
 
 	/**
 	 * condition : String :<br/>
-	 * Conditions méteo.<br/>
+	 * Conditions méteo du jour pour la ville.<br/>
 	 */
 	private String condition;
 
 
 	/**
 	 * temp : String :<br/>
-	 * Temperature.<br/>
+	 * Temperature du jour pour la ville.<br/>
 	 */
 	private String temp;
 
 
 	/**
 	 * chill : String :<br/>
-	 * Température ressentie.<br/>
+	 * Température ressentie du jour pour la ville.<br/>
 	 */
 	private String chill;
 
 
 	/**
 	 * humidity : String :<br/>
-	 * Humidité.<br/>
+	 * Humidité du jour pour la ville.<br/>
 	 */
 	private String humidity;
 	
@@ -88,6 +88,17 @@ public class Meteo {
 	// *************************METHODES************************************/
 	
 
+	
+	 /**
+	 * method CONSTRUCTEUR Meteo() :<br/>
+	 * CONSTRUCTEUR D'ARITE NULLE.<br/>
+	 * <br/>
+	 */
+	public Meteo() {
+		super();
+	} // Fin de CONSTRUCTEUR D'ARITE NULLE.________________________________
+	
+	
 	
 	/**
 	 * method getCity() :<br/>
@@ -119,158 +130,152 @@ public class Meteo {
 	
 	/**
 	 * method getRegion() :<br/>
-	 * Getter .<br/>
+	 * Getter de la Région de la ville (Ile de France, ...).<br/>
 	 * <br/>
 	 *
 	 * @return region : String.<br/>
 	 */
-	public String getRegion() {
-	
+	public String getRegion() {	
 		return this.region;
-	}
+	} // Fin de getRegion()._______________________________________________
 
 
 	
 	/**
 	* method setRegion(
 	* String pRegion) :<br/>
-	* .<br/>
+	* Setter de la Région de la ville (Ile de France, ...).<br/>
 	* <br/>
 	*
 	* @param pRegion : String : valeur à passer à region.<br/>
 	*/
-	public void setRegion(String pRegion) {
-	
+	public void setRegion(
+			final String pRegion) {	
 		this.region = pRegion;
-	}
+	} // Fin de setRegion(...).____________________________________________
 
 
 	
 	/**
 	 * method getCountry() :<br/>
-	 * Getter .<br/>
+	 * Getter du Pays de la ville.<br/>
 	 * <br/>
 	 *
 	 * @return country : String.<br/>
 	 */
-	public String getCountry() {
-	
+	public String getCountry() {	
 		return this.country;
-	}
+	} // Fin de getCountry().______________________________________________
 
 
 	
 	/**
 	* method setCountry(
 	* String pCountry) :<br/>
-	* .<br/>
+	* Setter du Pays de la ville.<br/>
 	* <br/>
 	*
 	* @param pCountry : String : valeur à passer à country.<br/>
 	*/
-	public void setCountry(String pCountry) {
-	
+	public void setCountry(
+			final String pCountry) {	
 		this.country = pCountry;
-	}
+	} // Fin de setCountry(...).___________________________________________
 
 
 	
 	/**
 	 * method getCondition() :<br/>
-	 * Getter .<br/>
+	 * Getter des Conditions méteo du jour pour la ville.<br/>
 	 * <br/>
 	 *
 	 * @return condition : String.<br/>
 	 */
-	public String getCondition() {
-	
+	public String getCondition() {	
 		return this.condition;
-	}
+	} // Fin de getCondition().____________________________________________
 
 
 	
 	/**
 	* method setCondition(
 	* String pCondition) :<br/>
-	* .<br/>
+	* Setter des Conditions méteo du jour pour la ville.<br/>
 	* <br/>
 	*
 	* @param pCondition : String : valeur à passer à condition.<br/>
 	*/
-	public void setCondition(String pCondition) {
-	
+	public void setCondition(
+			final String pCondition) {	
 		this.condition = pCondition;
-	}
+	} // Fin de setCondition(...)._________________________________________
 
 
 	
 	/**
 	 * method getTemp() :<br/>
-	 * Getter .<br/>
+	 * Getter de la Temperature du jour pour la ville.<br/>
 	 * <br/>
 	 *
 	 * @return temp : String.<br/>
 	 */
-	public String getTemp() {
-	
+	public String getTemp() {	
 		return this.temp;
-	}
+	} // Fin de getTemp()._________________________________________________
 
 
 	
 	/**
 	* method setTemp(
 	* String pTemp) :<br/>
-	* .<br/>
+	* Setter de la Temperature du jour pour la ville.<br/>
 	* <br/>
 	*
 	* @param pTemp : String : valeur à passer à temp.<br/>
 	*/
-	public void setTemp(String pTemp) {
-	
+	public void setTemp(
+			final String pTemp) {	
 		this.temp = pTemp;
-	}
+	} // Fin de setTemp(...).______________________________________________
 
 
 	
 	/**
 	 * method getChill() :<br/>
-	 * Getter .<br/>
+	 * Getter de la Température ressentie du jour pour la ville.<br/>
 	 * <br/>
 	 *
 	 * @return chill : String.<br/>
 	 */
-	public String getChill() {
-	
+	public String getChill() {	
 		return this.chill;
-	}
+	} // Fin de getChill().________________________________________________
 
 
 	
 	/**
 	* method setChill(
 	* String pChill) :<br/>
-	* .<br/>
+	* Setter de la Température ressentie du jour pour la ville.<br/>
 	* <br/>
 	*
 	* @param pChill : String : valeur à passer à chill.<br/>
 	*/
-	public void setChill(String pChill) {
-	
+	public void setChill(
+			final String pChill) {	
 		this.chill = pChill;
-	}
+	} // Fin de setChill(...)._____________________________________________
 
 
 	
 	/**
 	 * method getHumidity() :<br/>
-	 * Getter .<br/>
+	 * Getter de l'Humidité du jour pour la ville.<br/>
 	 * <br/>
 	 *
 	 * @return humidity : String.<br/>
 	 */
-	public String getHumidity() {
-	
+	public String getHumidity() {	
 		return this.humidity;
 	}
 
@@ -279,18 +284,16 @@ public class Meteo {
 	/**
 	* method setHumidity(
 	* String pHumidity) :<br/>
-	* .<br/>
+	* Setter de l'Humidité du jour pour la ville.<br/>
 	* <br/>
 	*
 	* @param pHumidity : String : valeur à passer à humidity.<br/>
 	*/
-	public void setHumidity(String pHumidity) {
-	
+	public void setHumidity(
+			final String pHumidity) {	
 		this.humidity = pHumidity;
-	}
+	} // Fin de setHumidity(...).__________________________________________
 
-
-	
 	
 
 } // FIN DE LA CLASSE Meteo.-------------------------------------------------

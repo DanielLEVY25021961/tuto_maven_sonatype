@@ -77,6 +77,13 @@ public final class YahooMeteoRetriever {
 	 * where text='Sourdun, France') and u='c' 
 	 * limit 5 |sort(field='item.forecast.date', descending='false');</li>
 	 * </ul>
+	 * Lien vers le site Yahoo-Meteo : 
+	 * https://fr.news.yahoo.com/meteo/ puis 
+	 * sélectionner un autre lieu.<br/>
+	 * Lien vers le site pour Sourdun : 
+	 * https://fr.news.yahoo.com/meteo/france/%C3%AEle-de-france
+	 * /sourdun-12727383.<br/>
+	 * <br/>
 	 *
 	 * @param pVille : String : Ville pour la prévision météo.<br/>
 	 * @param pCountry : Country : Pays de la Ville pour la prévision.<br/>

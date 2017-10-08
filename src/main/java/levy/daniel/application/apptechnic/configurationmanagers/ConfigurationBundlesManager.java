@@ -658,6 +658,7 @@ public final class ConfigurationBundlesManager {
 				
 			}
 			
+			/* Clé vide (sans valeur). */
 			if (StringUtils.isBlank(pathRapportsControles)) {
 				
 				final String messageValeurnull 

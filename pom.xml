@@ -205,6 +205,68 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		
 	</dependencies>
 
+	
+				<!-- ======================================  -->
+				<!--   REPOSITORIES	POUR LES DEPENDANCES  	 -->
+				<!-- ======================================  -->	
+			<!-- Précise la localisation des dépôts Maven -->
+	<repositories>
+	
+		<!-- Dépôt Central MAVEN pour les dépendances -->
+		<repository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<!-- Ici les RELEASES, pas les milestones ou les snapshots. -->
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>			
+		</repository>
+		
+		<!-- http://www.baeldung.com/spring-maven-repository -->
+		<!-- dépôt Maven pour SPRING au cas où le dépôt central est indisponible. -->
+		<repository> 
+        <id>repository.spring.release</id> 
+        	<name>Spring GA Repository</name> 
+        	<url>http://repo.spring.io/release</url>
+        	<!-- Ici les RELEASES, pas les milestones ou les snapshots. -->
+        	<snapshots>
+				<enabled>false</enabled>
+			</snapshots>			         
+    	</repository>
+    	
+    	<!-- dépôt Maven pour SPRING au cas où le dépôt central est indisponible. -->
+    	<repository>
+	        <id>io.spring.repo.maven.release</id>
+	        <url>http://repo.spring.io/release/</url>
+	        <!-- Ici les RELEASES, pas les milestones ou les snapshots. -->
+	        <snapshots>
+	        	<enabled>false</enabled>
+	        </snapshots>
+	    </repository>
+    	    	
+	</repositories>
+	
+  
+  				<!-- ================================== -->
+				<!--       PLUGIN REPOSITORIES			-->
+				<!-- ================================== -->	
+  			
+	  <pluginRepositories>
+	    <pluginRepository>
+	      <releases>
+	        <updatePolicy>never</updatePolicy>
+	      </releases>
+	      <snapshots>
+	        <enabled>false</enabled>
+	      </snapshots>
+	      <id>central</id>
+	      <name>Central Repository</name>
+	      <url>https://repo.maven.apache.org/maven2</url>
+	    </pluginRepository>
+	  </pluginRepositories>
+  
+
   	<build>
 
 		<!-- ====================== -->
@@ -250,8 +312,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   				<!-- ================================== -->
 				<!--       	Management des plugins		-->
 				<!-- ================================== -->
-
-
 
 	<plugins>
 
@@ -472,6 +532,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			    <artifactId>maven-site-plugin</artifactId>
 			    <version>3.6</version>
 			    <configuration>
+			    		<!-- Pour forcer l'encodage du site Web en UTF-8 -->
      					<outputEncoding>UTF-8</outputEncoding>
   				</configuration>
   				<executions>

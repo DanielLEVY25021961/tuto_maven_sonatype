@@ -3,6 +3,10 @@ package levy.daniel.application.apptechnic.configurationmanagers;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -11,8 +15,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import levy.daniel.application.apptechnic.exceptions.technical.AbstractRunTimeTechnicalException;
 import levy.daniel.application.apptechnic.exceptions.technical.impl.BundleManquantRunTimeException;
 import levy.daniel.application.apptechnic.exceptions.technical.impl.CleManquanteRunTimeException;
+import levy.daniel.application.apptechnic.exceptions.technical.impl.CleNullRunTimeException;
+import levy.daniel.application.apptechnic.exceptions.technical.impl.FichierInexistantRunTimeException;
 
 
 /**
@@ -94,6 +101,14 @@ public final class ConfigurationBundlesManager {
 	 */
 	public static final String METHODE_GET_PATH_RESSOURCES_EXTERNES 
 		= "Méthode getPathRessourcesExternes()";
+
+	
+	/**
+	 * METHODE_GET_PATH_RAPPORTS_CONTROLE : String :<br/>
+	 * "Méthode getPathRapportsControles()".<br/>
+	 */
+	public static final String METHODE_GET_PATH_RAPPORTS_CONTROLE 
+		= "Méthode getPathRapportsControles()";
 	
 	
 	/**
@@ -573,6 +588,183 @@ public final class ConfigurationBundlesManager {
 			return "ressourcesexternes";
 	
 	} // Fin de getClePathRessourcesExternes().____________________________
+	
+
+	
+	/**
+	 * method getPathRapportsControle() :<br/>
+	 * <ul>
+	 * <li>Fournit le path <b>EXTERNE</b> (hors classpath) 
+	 * du répertoire des rapports de contrôle accessibles 
+	 * par la MOA et les utilisateurs.</li>
+	 * <li>Le path du répertoire des rapports de contrôle 
+	 * est déterminé par le centre-serveur et doit être écrit en dur dans 
+	 * le properties 'configuration_ressources_externes.properties'. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/rapports_controle'</li>
+	 * <li>clé = "rapportscontrole".</li>
+	 * </ul>
+	 *
+	 * @return : String : path vers le répertoire des 
+	 * rapports de contrôle.<br/>
+	 * 
+	 * @throws Exception : 
+	 * - BundleManquantRunTimeException 
+	 * si le properties est introuvable.<br/>
+	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
+	 * - CleNullRunTimeException si la valeur 
+	 * n'est pas renseignée pour la clé.<br/>
+	 * - FichierInexistantRunTimeException si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
+	 */
+	public static String getPathRapportsControle() throws Exception {
+		
+		/* Bloc synchronized. */
+		synchronized (ConfigurationBundlesManager.class) {
+			
+			final String nomBaseProperties 
+				= getNomBasePropertiesRessourcesExternes();
+			
+			String pathRapportsControles = null;
+			
+			try {
+				
+				if (bundleRessourcesExternes == null) {
+					getBundleRessourcesExternes();
+				}
+				
+			}
+			catch (BundleManquantRunTimeException bundleManquantExc) {
+				
+				traiterBundleManquantRunTimeException(
+						METHODE_GET_PATH_RAPPORTS_CONTROLE
+							, nomBaseProperties
+								, bundleManquantExc);
+				
+			}
+			
+			try {
+				pathRapportsControles 
+				= bundleRessourcesExternes
+					.getString(getClePathRapportsControles());
+			}
+			catch (MissingResourceException mre) {
+				
+				traiterMissingResourceException(
+						METHODE_GET_PATH_RAPPORTS_CONTROLE
+							, nomBaseProperties
+								, mre
+								, getClePathRapportsControles());
+				
+			}
+			
+			if (StringUtils.isBlank(pathRapportsControles)) {
+				
+				final String messageValeurnull 
+				= CLASSE_CONFIGURATIONBUNDLESMANAGER 
+				+ SEPARATEUR_MOINS_AERE
+				+ METHODE_GET_PATH_RAPPORTS_CONTROLE
+				+ SEPARATEUR_MOINS_AERE
+				+ "Pas de valeur indiquée pour la clé '" 
+				+ getClePathRapportsControles() 
+				+ "' dans " 
+				+ reconstituerNomProperties(
+						nomBaseProperties
+						, LocaleManager.getLocaleApplication());
+				
+				/* LOG.FATAL. */
+				if (LOG.isFatalEnabled()) {
+					LOG.fatal(messageValeurnull);
+				}
+				
+				/* Rapport. */
+				/* Ajout du message au rapport de configuration. */
+				ajouterMessageAuRapportConfigurationCsv(
+						messageValeurnull);
+				
+				/* Ajout du message au rapport utilisateur. */
+				ajouterMessageAuRapportUtilisateurCsv(
+						creerMessageUtilisateur(
+								messageValeurnull));
+				
+				final AbstractRunTimeTechnicalException excValeurNull 
+					= new CleNullRunTimeException(messageValeurnull);
+				
+				throw excValeurNull;
+				
+			}
+			
+			final Path path = Paths.get(pathRapportsControles);
+			final boolean existRepertoire 
+				= Files.exists(path, LinkOption.NOFOLLOW_LINKS);
+			final boolean estRepertoire 
+				= Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS);
+			
+			if (!existRepertoire || !estRepertoire) {
+				
+				final String messageRepInexistant 
+				= CLASSE_CONFIGURATIONBUNDLESMANAGER
+				+ SEPARATEUR_MOINS_AERE
+				+ METHODE_GET_PATH_RAPPORTS_CONTROLE
+				+ SEPARATEUR_MOINS_AERE
+				+ "Le répertoire '" 
+				+ pathRapportsControles 
+				+ "' est inexistant ou n'est pas un répertoire";
+				
+				/* LOG.FATAL. */
+				if (LOG.isFatalEnabled()) {
+					LOG.fatal(messageRepInexistant);
+				}
+				
+				/* Rapport. */
+				/* Ajout du message au rapport de configuration. */
+				ajouterMessageAuRapportConfigurationCsv(
+						messageRepInexistant);
+				
+				/* Ajout du message au rapport utilisateur. */
+				ajouterMessageAuRapportUtilisateurCsv(
+						creerMessageUtilisateur(
+								messageRepInexistant));
+				
+				final AbstractRunTimeTechnicalException excRepInexistant 
+					= new FichierInexistantRunTimeException(
+							messageRepInexistant);
+				
+				throw excRepInexistant;
+								
+			}
+			
+			return pathRapportsControles;
+			
+		} // Fin de synchronized.__________________________________
+		
+	} // Fin de getPathRapportsControle()._________________________________
+	
+
+	
+	/**
+	 * method getClePathRapportsControles() :<br/>
+	 * <ul>
+	 * <li>Fournit la clé du path <b>EXTERNE</b> (hors classpath) 
+	 * du répertoire des rapports de contrôle accessibles 
+	 * par la MOA et les utilisateurs.</li>
+	 * <li>Cette clé est stockée dans 
+	 * <b>'configuration_ressources_externes.properties'</b> 
+	 * sous la racine.</li>
+	 * <li>Le path du répertoire des rapports de contrôle n'est accessible 
+	 * qu'au centre-serveur et doit être écrit en dur dans le properties. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/rapports_controle'</li>
+	 * <li>clé = "rapportscontrole".</li>
+	 * </ul>
+	 *
+	 * @return : String : "ressourcesexternes".<br/>
+	 */
+	private static String getClePathRapportsControles() {
+		
+			return "rapportscontrole";
+	
+	} // Fin de getClePathRapportsControles()._____________________________
 	
 	
 	

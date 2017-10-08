@@ -10,6 +10,8 @@ import org.apache.commons.logging.LogFactory;
 import levy.daniel.application.apptechnic.configurationmanagers.ConfigurationBundlesManager;
 import levy.daniel.application.apptechnic.exceptions.technical.impl.BundleManquantRunTimeException;
 import levy.daniel.application.apptechnic.exceptions.technical.impl.CleManquanteRunTimeException;
+import levy.daniel.application.apptechnic.exceptions.technical.impl.CleNullRunTimeException;
+import levy.daniel.application.apptechnic.exceptions.technical.impl.FichierInexistantRunTimeException;
 
 /**
  * class ConfigurationApplicationManager :<br/>
@@ -341,13 +343,17 @@ public final class ConfigurationApplicationManager {
 	 * 
 	 * @throws Exception : BundleManquantRunTimeException 
 	 * si le properties est introuvable.<br/>
+	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
+	 * - CleNullRunTimeException si la valeur 
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
+	 * - FichierInexistantRunTimeException si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
 	 */
 	public static String getPathRessourcesExternes() throws Exception {
 		
 		/* Bloc synchronized. */
 		synchronized (ConfigurationApplicationManager.class) {
-			
-			
+						
 			String pathRessourcesExternes = null;
 			
 			try {
@@ -367,6 +373,15 @@ public final class ConfigurationApplicationManager {
 				traiterCleManquanteException(cleManquanteExc);
 				
 			}
+			catch (CleNullRunTimeException cleNullExc) {
+				
+				traiterCleNullRunTimeException(cleNullExc);
+			}
+			catch (FichierInexistantRunTimeException fichierInexistantExc) {
+				
+				traiterFichierInexistantRunTimeException(
+						fichierInexistantExc);
+			}
 			
 			return pathRessourcesExternes;
 			
@@ -375,6 +390,210 @@ public final class ConfigurationApplicationManager {
 	} // Fin de getPathRessourcesExternes()._______________________________
 	
 
+	
+	/**
+	 * method getPathRapportsControle() :<br/>
+	 * <ul>
+	 * <li>Fournit le path <b>EXTERNE</b> (hors classpath) 
+	 * du <b>répertoire des rapports de contrôle</b> accessibles 
+	 * par la MOA et les utilisateurs.</li>
+	 * <li>Le path du répertoire des rapports de contrôle 
+	 * est déterminé par le centre-serveur et doit être écrit en dur dans 
+	 * le properties 'configuration_ressources_externes.properties'. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/rapports_controle'</li>
+	 * <li>clé = "rapportscontrole".</li>
+	 * </ul>
+	 *
+	 * @return : String : path vers le répertoire des 
+	 * rapports de contrôle.<br/>
+	 * 
+	 * @throws Exception : 
+	 * - BundleManquantRunTimeException 
+	 * si le properties est introuvable.<br/>
+	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
+	 * - CleNullRunTimeException si la valeur 
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
+	 * - FichierInexistantRunTimeException si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
+	 */
+	public static String getPathRapportsControle() throws Exception {
+		
+		/* Bloc synchronized. */
+		synchronized (ConfigurationApplicationManager.class) {
+						
+			String pathRapportsControle = null;
+			
+			try {
+				
+				pathRapportsControle 
+					= ConfigurationBundlesManager
+						.getPathRapportsControle();
+				
+			}
+			catch (BundleManquantRunTimeException bundleManquantExc) {
+				
+				traiterException(bundleManquantExc);
+				
+			}
+			catch (CleManquanteRunTimeException cleManquanteExc) {
+				
+				traiterCleManquanteException(cleManquanteExc);
+				
+			}
+			catch (CleNullRunTimeException cleNullExc) {
+				
+				traiterCleNullRunTimeException(cleNullExc);
+			}
+			catch (FichierInexistantRunTimeException fichierInexistantExc) {
+				
+				traiterFichierInexistantRunTimeException(
+						fichierInexistantExc);
+			}
+			
+			return pathRapportsControle;
+			
+		} // Fin de synchronized.__________________________________
+		
+	} // Fin de getPathRapportsControle()._________________________________
+
+
+	
+	/**
+	 * method getPathLogs() :<br/>
+	 * <ul>
+	 * <li>Fournit le path <b>EXTERNE</b> (hors classpath) 
+	 * du répertoire des logs accessibles 
+	 * par la MOE et les centre-serveur.</li>
+	 * <li>Le path du répertoire des logs 
+	 * est déterminé par le centre-serveur et doit être écrit en dur dans 
+	 * le properties 'configuration_ressources_externes.properties'. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/logs'</li>
+	 * <li>clé = "logs".</li>
+	 * </ul>
+	 *
+	 * @return : String : path vers le répertoire des 
+	 * logs.<br/>
+	 * 
+	 * @throws Exception : 
+	 * - BundleManquantRunTimeException 
+	 * si le properties est introuvable.<br/>
+	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
+	 * - CleNullRunTimeException si la valeur 
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
+	 * - FichierInexistantRunTimeException si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
+	 */
+	public static String getPathLogs() throws Exception {
+		
+		/* Bloc synchronized. */
+		synchronized (ConfigurationApplicationManager.class) {
+
+			String pathLogs = null;
+
+			try {
+
+				pathLogs 
+					= ConfigurationBundlesManager
+						.getPathLogs();
+
+			}
+			catch (BundleManquantRunTimeException bundleManquantExc) {
+
+				traiterException(bundleManquantExc);
+
+			}
+			catch (CleManquanteRunTimeException cleManquanteExc) {
+
+				traiterCleManquanteException(cleManquanteExc);
+
+			}
+			catch (CleNullRunTimeException cleNullExc) {
+
+				traiterCleNullRunTimeException(cleNullExc);
+			}
+			catch (FichierInexistantRunTimeException fichierInexistantExc) {
+
+				traiterFichierInexistantRunTimeException(
+						fichierInexistantExc);
+			}
+
+			return pathLogs;
+		
+		} // Fin de synchronized.__________________________________
+
+	} // Fin de getPathLogs()._____________________________________________
+
+
+		
+	/**
+	 * method getPathData() :<br/>
+	 * <ul>
+	 * <li>Fournit le path <b>EXTERNE</b> (hors classpath) 
+	 * du répertoire des data accessibles 
+	 * par la MOA et les utilisateurs.</li>
+	 * <li>Le path du répertoire des data 
+	 * est déterminé par le centre-serveur et doit être écrit en dur dans 
+	 * le properties 'configuration_ressources_externes.properties'. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/data'</li>
+	 * <li>clé = "data".</li>
+	 * </ul>
+	 *
+	 * @return : String : path vers le répertoire des 
+	 * sata.<br/>
+	 * 
+	 * @throws Exception : 
+	 * - BundleManquantRunTimeException 
+	 * si le properties est introuvable.<br/>
+	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
+	 * - CleNullRunTimeException si la valeur 
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
+	 * - FichierInexistantRunTimeException si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
+	 */
+	public static String getPathData() throws Exception {
+		
+		/* Bloc synchronized. */
+		synchronized (ConfigurationApplicationManager.class) {
+
+			String pathData = null;
+
+			try {
+
+				pathData 
+					= ConfigurationBundlesManager
+						.getPathData();
+
+			}
+			catch (BundleManquantRunTimeException bundleManquantExc) {
+
+				traiterException(bundleManquantExc);
+
+			}
+			catch (CleManquanteRunTimeException cleManquanteExc) {
+
+				traiterCleManquanteException(cleManquanteExc);
+
+			}
+			catch (CleNullRunTimeException cleNullExc) {
+
+				traiterCleNullRunTimeException(cleNullExc);
+			}
+			catch (FichierInexistantRunTimeException fichierInexistantExc) {
+
+				traiterFichierInexistantRunTimeException(
+						fichierInexistantExc);
+			}
+
+			return pathData;
+		
+		} // Fin de synchronized.__________________________________
+		
+	} // Fin de getPathData()._____________________________________________
+
+	
 	
 	/**
 	 * method getBundleMessagesControle() :<br/>
@@ -773,7 +992,7 @@ public final class ConfigurationApplicationManager {
 		 * de configuration éventuel. */
 		final String messageRapport 
 			= ConfigurationBundlesManager
-				.getMessageIndividuelRapport();
+					.getRapportConfigurationCsv();
 		
 		/* Récupération du message de rapport 
 		 * utilisateur éventuel. */
@@ -828,7 +1047,7 @@ public final class ConfigurationApplicationManager {
 		 * de configuration éventuel. */
 		final String messageRapport 
 			= ConfigurationBundlesManager
-				.getMessageIndividuelRapport();
+					.getRapportConfigurationCsv();
 		
 		/* Récupération du message de rapport 
 		 * utilisateur éventuel. */
@@ -850,11 +1069,121 @@ public final class ConfigurationApplicationManager {
 		}
 					
 		/* Jette une CleManquanteRunTimeException 
-		 * si le properties est manquant. */
+		 * si la clé est manquante dans le properties. */
 		throw new CleManquanteRunTimeException(
 				messageRapport, pE);
 		
 	} // Fin de traiterCleManquanteException(...).________________________-
+	
+	
+	
+	/**
+	 * method traiterCleNullRunTimeException(
+	 * Exception pE) :<br/>
+	 * <ul>
+	 * <li>récupère le rapport de configuration csv produit 
+	 * par le ConfigurationBundlesManager en cas d'Exception.</li>
+	 * <li>ajoute ce rapport à 'rapportConfigutrationCsv'.</li>
+	 * <li>récupère le rapport utilisateur csv produit 
+	 * par le ConfigurationBundlesManager en cas d'Exception.</li>
+	 * <li>ajoute ce rapport à 'rapportUtilisateurCsv'.</li>
+	 * <li>Jette une CleNullRunTimeException 
+	 * qui encapsule PE.</li>
+	 * </ul>
+	 *
+	 * @param pE : Exception.<br/>
+	 * 
+	 * @throws CleNullRunTimeException
+	 */
+	private static void traiterCleNullRunTimeException(
+			final Exception pE) throws CleNullRunTimeException {
+		
+		/* Récupération du message de rapport 
+		 * de configuration éventuel. */
+		final String messageRapport 
+			= ConfigurationBundlesManager
+				.getRapportConfigurationCsv();
+		
+		/* Récupération du message de rapport 
+		 * utilisateur éventuel. */
+		final String messageUtilisateur 
+		= ConfigurationBundlesManager.getRapportUtilisateurCsv();
+		
+		/* Ajout du message de rapport éventuel 
+		 * au rapportConfigurationCsv. */
+		if (!StringUtils.isBlank(messageRapport)) {
+			ajouterMessageAuRapportConfigurationCsv(
+					messageRapport);
+		}
+		
+		/* Ajout du message de rapport éventuel 
+		 * au rapportUtilisateurCsv. */
+		if (!StringUtils.isBlank(messageUtilisateur)) {
+			ajouterMessageAuRapportUtilisateurCsv(
+					messageUtilisateur);
+		}
+					
+		/* Jette une CleNullRunTimeException 
+		 * si la clé nepossède pas de valeur. */
+		throw new CleNullRunTimeException(
+				messageRapport, pE);
+		
+	} // Fin de traiterCleNullRunTimeException(...)._______________________
+	
+
+	
+	/**
+	 * method traiterFichierInexistantRunTimeException(
+	 * Exception pE) :<br/>
+	 * <ul>
+	 * <li>récupère le rapport de configuration csv produit 
+	 * par le ConfigurationBundlesManager en cas d'Exception.</li>
+	 * <li>ajoute ce rapport à 'rapportConfigutrationCsv'.</li>
+	 * <li>récupère le rapport utilisateur csv produit 
+	 * par le ConfigurationBundlesManager en cas d'Exception.</li>
+	 * <li>ajoute ce rapport à 'rapportUtilisateurCsv'.</li>
+	 * <li>Jette une FichierInexistantRunTimeException 
+	 * qui encapsule PE.</li>
+	 * </ul>
+	 *
+	 * @param pE : Exception.<br/>
+	 * 
+	 * @throws FichierInexistantRunTimeException
+	 */
+	private static void traiterFichierInexistantRunTimeException(
+			final Exception pE) throws FichierInexistantRunTimeException {
+		
+		/* Récupération du message de rapport 
+		 * de configuration éventuel. */
+		final String messageRapport 
+			= ConfigurationBundlesManager
+					.getRapportConfigurationCsv();
+		
+		/* Récupération du message de rapport 
+		 * utilisateur éventuel. */
+		final String messageUtilisateur 
+		= ConfigurationBundlesManager.getRapportUtilisateurCsv();
+		
+		/* Ajout du message de rapport éventuel 
+		 * au rapportConfigurationCsv. */
+		if (!StringUtils.isBlank(messageRapport)) {
+			ajouterMessageAuRapportConfigurationCsv(
+					messageRapport);
+		}
+		
+		/* Ajout du message de rapport éventuel 
+		 * au rapportUtilisateurCsv. */
+		if (!StringUtils.isBlank(messageUtilisateur)) {
+			ajouterMessageAuRapportUtilisateurCsv(
+					messageUtilisateur);
+		}
+					
+		/* Jette une FichierInexistantRunTimeException 
+		 * si le répertoire est inexistant ou fichier simple. */
+		throw new FichierInexistantRunTimeException(
+				messageRapport, pE);
+
+	} // Fin de traiterFichierInexistantRunTimeException(...)._____________
 	
 	
 	

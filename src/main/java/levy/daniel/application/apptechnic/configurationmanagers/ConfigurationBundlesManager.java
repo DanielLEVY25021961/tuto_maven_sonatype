@@ -41,6 +41,18 @@ import levy.daniel.application.apptechnic.exceptions.technical.impl.FichierInexi
  * un singleton de BundleXXX.<br/> 
  * (par exemple : getBundleApplication() fournit un Singleton 
  * de ResourceBundle encapsulant 'application_fr_FR.properties').</li>
+ * <li>Les méthodes getPathXXX fournissent pathXXX.<br/> 
+ * (par exemple : getPathRapportsControle() fournit le chemin
+ * vers le répertoire des rapports de contrôle).</li>
+ * <li>
+ * Type les Exceptions : <br/>
+ * <p>
+ * <br/>
+ * <img src="../../../../../../../../javadoc/images/exceptions_resourcebundle.png" 
+ * alt="Typage des exceptions" border="1" align="center" />
+ * <br/>
+ * </p>
+ * </li>
  * </ul>
  * </ul>
  *
@@ -109,7 +121,23 @@ public final class ConfigurationBundlesManager {
 	 */
 	public static final String METHODE_GET_PATH_RAPPORTS_CONTROLE 
 		= "Méthode getPathRapportsControles()";
+
 	
+	/**
+	 * METHODE_GET_PATH_LOGS : String :<br/>
+	 * "Méthode getPathLogs()".<br/>
+	 */
+	public static final String METHODE_GET_PATH_LOGS 
+		= "Méthode getPathLogs()";
+
+	
+	/**
+	 * METHODE_GET_PATH_DATA : String :<br/>
+	 * "Méthode getPathData()".<br/>
+	 */
+	public static final String METHODE_GET_PATH_DATA 
+		= "Méthode getPathData()";
+
 	
 	/**
 	 * METHODE_GET_BUNDLE_INTERNE : String :<br/>
@@ -516,12 +544,17 @@ public final class ConfigurationBundlesManager {
 	 * - BundleManquantRunTimeException 
 	 * si le properties est introuvable.<br/>
 	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
+	 * - CleNullRunTimeException si la valeur 
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
+	 * - FichierInexistantRunTimeException si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
 	 */
 	public static String getPathRessourcesExternes() throws Exception {
 		
 		/* Bloc synchronized. */
 		synchronized (ConfigurationBundlesManager.class) {
 			
+			/* Récupération du nom de base du properties. */
 			final String nomBaseProperties 
 				= getNomBasePropertiesRessourcesExternes();
 			
@@ -529,6 +562,7 @@ public final class ConfigurationBundlesManager {
 			
 			try {
 				
+				/* Récupération du bundleRessourcesExternes. */
 				if (bundleRessourcesExternes == null) {
 					getBundleRessourcesExternes();
 				}
@@ -536,6 +570,7 @@ public final class ConfigurationBundlesManager {
 			}
 			catch (BundleManquantRunTimeException bundleManquantExc) {
 				
+				/* cas où bundleRessourcesExternes est manquant. */
 				traiterBundleManquantRunTimeException(
 						METHODE_GET_PATH_RESSOURCES_EXTERNES
 							, nomBaseProperties
@@ -550,6 +585,7 @@ public final class ConfigurationBundlesManager {
 			}
 			catch (MissingResourceException mre) {
 				
+				/* cas où la clé est manquante dans le properties. */
 				traiterMissingResourceException(
 						METHODE_GET_PATH_RESSOURCES_EXTERNES
 							, nomBaseProperties
@@ -557,6 +593,23 @@ public final class ConfigurationBundlesManager {
 								, getClePathRessourcesExternes());
 				
 			}
+			
+			/* Clé vide (sans valeur). */
+			if (StringUtils.isBlank(pathRessourcesExternes)) {
+				
+				traiterCleVide(
+						METHODE_GET_PATH_RESSOURCES_EXTERNES
+						, getClePathRessourcesExternes()
+						, nomBaseProperties);
+				
+			}
+			
+			/* Répertoire inexistant ou 
+			 * pas un répertoire (fichier simple). */
+			traiterRepertoireDefectueux(
+					METHODE_GET_PATH_RESSOURCES_EXTERNES
+						, pathRessourcesExternes);
+			
 			
 			return pathRessourcesExternes;
 			
@@ -613,7 +666,7 @@ public final class ConfigurationBundlesManager {
 	 * si le properties est introuvable.<br/>
 	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
 	 * - CleNullRunTimeException si la valeur 
-	 * n'est pas renseignée pour la clé.<br/>
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
 	 * - FichierInexistantRunTimeException si le 
 	 * répertoire est inexistant ou pas un répertoire.<br/>
 	 */
@@ -629,6 +682,7 @@ public final class ConfigurationBundlesManager {
 			
 			try {
 				
+				/* Récupération du bundleRessourcesExternes. */
 				if (bundleRessourcesExternes == null) {
 					getBundleRessourcesExternes();
 				}
@@ -636,6 +690,7 @@ public final class ConfigurationBundlesManager {
 			}
 			catch (BundleManquantRunTimeException bundleManquantExc) {
 				
+				/* cas où bundleRessourcesExternes est manquant. */
 				traiterBundleManquantRunTimeException(
 						METHODE_GET_PATH_RAPPORTS_CONTROLE
 							, nomBaseProperties
@@ -650,6 +705,7 @@ public final class ConfigurationBundlesManager {
 			}
 			catch (MissingResourceException mre) {
 				
+				/* cas où la clé est manquante dans le properties. */
 				traiterMissingResourceException(
 						METHODE_GET_PATH_RAPPORTS_CONTROLE
 							, nomBaseProperties
@@ -661,79 +717,18 @@ public final class ConfigurationBundlesManager {
 			/* Clé vide (sans valeur). */
 			if (StringUtils.isBlank(pathRapportsControles)) {
 				
-				final String messageValeurnull 
-				= CLASSE_CONFIGURATIONBUNDLESMANAGER 
-				+ SEPARATEUR_MOINS_AERE
-				+ METHODE_GET_PATH_RAPPORTS_CONTROLE
-				+ SEPARATEUR_MOINS_AERE
-				+ "Pas de valeur indiquée pour la clé '" 
-				+ getClePathRapportsControles() 
-				+ "' dans " 
-				+ reconstituerNomProperties(
-						nomBaseProperties
-						, LocaleManager.getLocaleApplication());
-				
-				/* LOG.FATAL. */
-				if (LOG.isFatalEnabled()) {
-					LOG.fatal(messageValeurnull);
-				}
-				
-				/* Rapport. */
-				/* Ajout du message au rapport de configuration. */
-				ajouterMessageAuRapportConfigurationCsv(
-						messageValeurnull);
-				
-				/* Ajout du message au rapport utilisateur. */
-				ajouterMessageAuRapportUtilisateurCsv(
-						creerMessageUtilisateur(
-								messageValeurnull));
-				
-				final AbstractRunTimeTechnicalException excValeurNull 
-					= new CleNullRunTimeException(messageValeurnull);
-				
-				throw excValeurNull;
+				traiterCleVide(
+						METHODE_GET_PATH_RAPPORTS_CONTROLE
+						, getClePathRapportsControles()
+						, nomBaseProperties);
 				
 			}
 			
-			final Path path = Paths.get(pathRapportsControles);
-			final boolean existRepertoire 
-				= Files.exists(path, LinkOption.NOFOLLOW_LINKS);
-			final boolean estRepertoire 
-				= Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS);
-			
-			if (!existRepertoire || !estRepertoire) {
-				
-				final String messageRepInexistant 
-				= CLASSE_CONFIGURATIONBUNDLESMANAGER
-				+ SEPARATEUR_MOINS_AERE
-				+ METHODE_GET_PATH_RAPPORTS_CONTROLE
-				+ SEPARATEUR_MOINS_AERE
-				+ "Le répertoire '" 
-				+ pathRapportsControles 
-				+ "' est inexistant ou n'est pas un répertoire";
-				
-				/* LOG.FATAL. */
-				if (LOG.isFatalEnabled()) {
-					LOG.fatal(messageRepInexistant);
-				}
-				
-				/* Rapport. */
-				/* Ajout du message au rapport de configuration. */
-				ajouterMessageAuRapportConfigurationCsv(
-						messageRepInexistant);
-				
-				/* Ajout du message au rapport utilisateur. */
-				ajouterMessageAuRapportUtilisateurCsv(
-						creerMessageUtilisateur(
-								messageRepInexistant));
-				
-				final AbstractRunTimeTechnicalException excRepInexistant 
-					= new FichierInexistantRunTimeException(
-							messageRepInexistant);
-				
-				throw excRepInexistant;
-								
-			}
+			/* Répertoire inexistant ou 
+			 * pas un répertoire (fichier simple). */
+			traiterRepertoireDefectueux(
+					METHODE_GET_PATH_RAPPORTS_CONTROLE
+						, pathRapportsControles);
 			
 			return pathRapportsControles;
 			
@@ -742,6 +737,7 @@ public final class ConfigurationBundlesManager {
 	} // Fin de getPathRapportsControle()._________________________________
 	
 
+	
 	
 	/**
 	 * method getClePathRapportsControles() :<br/>
@@ -759,7 +755,7 @@ public final class ConfigurationBundlesManager {
 	 * <li>clé = "rapportscontrole".</li>
 	 * </ul>
 	 *
-	 * @return : String : "ressourcesexternes".<br/>
+	 * @return : String : "rapportscontrole".<br/>
 	 */
 	private static String getClePathRapportsControles() {
 		
@@ -767,7 +763,247 @@ public final class ConfigurationBundlesManager {
 	
 	} // Fin de getClePathRapportsControles()._____________________________
 	
+
 	
+	/**
+	 * method getPathLogs() :<br/>
+	 * <ul>
+	 * <li>Fournit le path <b>EXTERNE</b> (hors classpath) 
+	 * du répertoire des logs accessibles 
+	 * par la MOE et le centre-serveur.</li>
+	 * <li>Le path du répertoire des logs 
+	 * est déterminé par le centre-serveur et doit être écrit en dur dans 
+	 * le properties 'configuration_ressources_externes.properties'. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/logs'</li>
+	 * <li>clé = "logs".</li>
+	 * </ul>
+	 *
+	 * @return : String : path vers le répertoire des 
+	 * logs.<br/>
+	 * 
+	 * @throws Exception : 
+	 * - BundleManquantRunTimeException 
+	 * si le properties est introuvable.<br/>
+	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
+	 * - CleNullRunTimeException si la valeur 
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
+	 * - FichierInexistantRunTimeException si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
+	 */
+	public static String getPathLogs() throws Exception {
+		
+		/* Bloc synchronized. */
+		synchronized (ConfigurationBundlesManager.class) {
+			
+			final String nomBaseProperties 
+				= getNomBasePropertiesRessourcesExternes();
+			
+			String pathLogs = null;
+			
+			try {
+				
+				/* Récupération du bundleRessourcesExternes. */
+				if (bundleRessourcesExternes == null) {
+					getBundleRessourcesExternes();
+				}
+				
+			}
+			catch (BundleManquantRunTimeException bundleManquantExc) {
+				
+				/* cas où bundleRessourcesExternes est manquant. */
+				traiterBundleManquantRunTimeException(
+						METHODE_GET_PATH_LOGS
+							, nomBaseProperties
+								, bundleManquantExc);
+				
+			}
+			
+			try {
+				pathLogs 
+				= bundleRessourcesExternes
+					.getString(getClePathLogs());
+			}
+			catch (MissingResourceException mre) {
+				
+				/* cas où la clé est manquante dans le properties. */
+				traiterMissingResourceException(
+						METHODE_GET_PATH_LOGS
+							, nomBaseProperties
+								, mre
+								, getClePathLogs());
+				
+			}
+			
+			/* Clé vide (sans valeur). */
+			if (StringUtils.isBlank(pathLogs)) {
+				
+				traiterCleVide(
+						METHODE_GET_PATH_LOGS
+						, getClePathLogs()
+						, nomBaseProperties);
+				
+			}
+			
+			/* Répertoire inexistant ou 
+			 * pas un répertoire (fichier simple). */
+			traiterRepertoireDefectueux(
+					METHODE_GET_PATH_LOGS
+						, pathLogs);
+			
+			return pathLogs;
+			
+		} // Fin de synchronized.__________________________________
+		
+	} // Fin de getPathLogs()._____________________________________________
+	
+
+		
+	/**
+	 * method getClePathLogs() :<br/>
+	 * <ul>
+	 * <li>Fournit la clé du path <b>EXTERNE</b> (hors classpath) 
+	 * du répertoire des logs accessibles 
+	 * par la MOE et le contre-serveur.</li>
+	 * <li>Cette clé est stockée dans 
+	 * <b>'configuration_ressources_externes.properties'</b> 
+	 * sous la racine.</li>
+	 * <li>Le path du répertoire des logs n'est accessible 
+	 * qu'au centre-serveur et doit être écrit en dur dans le properties. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/logs'</li>
+	 * <li>clé = "logs".</li>
+	 * </ul>
+	 *
+	 * @return : String : "logs".<br/>
+	 */
+	private static String getClePathLogs() {
+		
+			return "logs";
+	
+	} // Fin de getClePathLogs().__________________________________________
+	
+
+		
+	/**
+	 * method getPathData() :<br/>
+	 * <ul>
+	 * <li>Fournit le path <b>EXTERNE</b> (hors classpath) 
+	 * du répertoire des data accessibles 
+	 * par la MOA et les utilisateurs.</li>
+	 * <li>Le path du répertoire des data 
+	 * est déterminé par le centre-serveur et doit être écrit en dur dans 
+	 * le properties 'configuration_ressources_externes.properties'. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/data'</li>
+	 * <li>clé = "data".</li>
+	 * </ul>
+	 *
+	 * @return : String : path vers le répertoire des 
+	 * sata.<br/>
+	 * 
+	 * @throws Exception : 
+	 * - BundleManquantRunTimeException 
+	 * si le properties est introuvable.<br/>
+	 * - CleManquanteRunTimeException si la clé est introuvable.<br/>
+	 * - CleNullRunTimeException si la valeur 
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
+	 * - FichierInexistantRunTimeException si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
+	 */
+	public static String getPathData() throws Exception {
+		
+		/* Bloc synchronized. */
+		synchronized (ConfigurationBundlesManager.class) {
+			
+			final String nomBaseProperties 
+				= getNomBasePropertiesRessourcesExternes();
+			
+			String pathData = null;
+			
+			try {
+				
+				/* Récupération du bundleRessourcesExternes. */
+				if (bundleRessourcesExternes == null) {
+					getBundleRessourcesExternes();
+				}
+				
+			}
+			catch (BundleManquantRunTimeException bundleManquantExc) {
+				
+				/* cas où bundleRessourcesExternes est manquant. */
+				traiterBundleManquantRunTimeException(
+						METHODE_GET_PATH_DATA
+							, nomBaseProperties
+								, bundleManquantExc);
+				
+			}
+			
+			try {
+				pathData 
+				= bundleRessourcesExternes
+					.getString(getClePathData());
+			}
+			catch (MissingResourceException mre) {
+				
+				/* cas où la clé est manquante dans le properties. */
+				traiterMissingResourceException(
+						METHODE_GET_PATH_DATA
+							, nomBaseProperties
+								, mre
+								, getClePathData());
+				
+			}
+			
+			/* Clé vide (sans valeur). */
+			if (StringUtils.isBlank(pathData)) {
+				
+				traiterCleVide(
+						METHODE_GET_PATH_DATA
+						, getClePathData()
+						, nomBaseProperties);
+				
+			}
+			
+			/* Répertoire inexistant ou 
+			 * pas un répertoire (fichier simple). */
+			traiterRepertoireDefectueux(
+					METHODE_GET_PATH_DATA
+						, pathData);
+			
+			return pathData;
+			
+		} // Fin de synchronized.__________________________________
+		
+	} // Fin de getPathData()._____________________________________________
+	
+
+		
+	/**
+	 * method getClePathData() :<br/>
+	 * <ul>
+	 * <li>Fournit la clé du path <b>EXTERNE</b> (hors classpath) 
+	 * du répertoire des data accessibles 
+	 * par la MOA et les utilisateurs.</li>
+	 * <li>Cette clé est stockée dans 
+	 * <b>'configuration_ressources_externes.properties'</b> 
+	 * sous la racine.</li>
+	 * <li>Le path du répertoire des data n'est accessible 
+	 * qu'au centre-serveur et doit être écrit en dur dans le properties. 
+	 * <br/>Par exemple : 'D:/Donnees/eclipse/eclipseworkspace_neon
+	 * /tuto_maven_sonatype/data'</li>
+	 * <li>clé = "data".</li>
+	 * </ul>
+	 *
+	 * @return : String : "data".<br/>
+	 */
+	private static String getClePathData() {
+		
+			return "data";
+	
+	} // Fin de getClePathData().__________________________________________
+	
+
 	
 	/**
 	 * method getBundleInterne(
@@ -1626,6 +1862,72 @@ public final class ConfigurationBundlesManager {
 	
 	
 	/**
+	 * method traiterBundleManquantRunTimeException(
+	 * String pMethode
+	 * , String pNomBaseProperties
+	 * , BundleManquantRunTimeException pBundleManquantExc) :<br/>
+	 * <ul>
+	 * <li>Prend en paramètre une BundleManquantRunTimeException
+	 * , ajoute des lignes aux rapports développeurs et utilisateurs
+	 * , logge fatal et jette une Exception 
+	 * typée BundleManquantRunTimeException.</li>
+	 * <li>crée une ligne dans le rapport de configuration csv.</li>
+	 * <li>ajoute cette ligne à 'rapportConfigutrationCsv'.</li>
+	 * <li>crée une ligne dans le rapport utilisateur csv.</li>
+	 * <li>ajoute cette ligne à 'rapportUtilisateurCsv'.</li>
+	 * <li>Jette une BundleManquantRunTimeException 
+	 * qui encapsule pBundleManquantExc.</li>
+	 * </ul>
+	 *
+	 * @param pMethode : String : nom de la méthode appelante.<br/>
+	 * @param pNomBaseProperties : nom de base du properties comme 
+	 * 'application' pour application_fr_FR.properties.<br/>
+	 * @param pBundleManquantExc : BundleManquantRunTimeException.<br/>
+	 * 
+	 * @throws BundleManquantRunTimeException
+	 */
+	private static void traiterBundleManquantRunTimeException(
+			final String pMethode
+				, final String pNomBaseProperties
+					, final BundleManquantRunTimeException pBundleManquantExc) 
+							throws BundleManquantRunTimeException {
+		
+		final String nomProperties 
+		= reconstituerNomProperties(
+				pNomBaseProperties
+					, LocaleManager.getLocaleApplication());
+		
+		/* Création du message pour le rapport technique. */
+		messageIndividuelRapport 
+		= creerMessage(
+				pMethode
+					, nomProperties);
+		
+		/* LOG.FATAL. */
+		if (LOG.isFatalEnabled()) {
+			LOG.fatal(messageIndividuelRapport, pBundleManquantExc);
+		}
+		
+		/* Rapport. */
+		/* Ajout du message au rapport de configuration. */
+		ajouterMessageAuRapportConfigurationCsv(
+				messageIndividuelRapport);
+		
+		/* Ajout du message au rapport utilisateur. */
+		ajouterMessageAuRapportUtilisateurCsv(
+				creerMessageUtilisateur(
+						messageIndividuelRapport));
+		
+		/* Jette une BundleManquantRunTimeException 
+		 * si le properties est manquant. */
+		throw new BundleManquantRunTimeException(
+				messageIndividuelRapport, pBundleManquantExc);
+		
+	} // Fin de traiterBundleManquantRunTimeException(...).________________
+
+
+	
+	/**
 	 * method traiterMissingResourceException(
 	 * String pMethode
 	 * , String pNomBaseProperties
@@ -1725,7 +2027,7 @@ public final class ConfigurationBundlesManager {
 				, final String pNomBaseProperties
 					, final MissingResourceException pMre
 						, final String pCle) 
-							throws BundleManquantRunTimeException {
+							throws CleManquanteRunTimeException {
 		
 		final String nomProperties 
 		= reconstituerNomProperties(
@@ -1766,71 +2068,152 @@ public final class ConfigurationBundlesManager {
 	} // Fin de traiterMissingResourceException(...).______________________
 
 
+
 	
 	/**
-	 * method traiterBundleManquantRunTimeException(
+	 * method traiterCleVide(
 	 * String pMethode
-	 * , String pNomBaseProperties
-	 * , BundleManquantRunTimeException pBundleManquantExc) :<br/>
+	 * , String pCle
+	 * , String pNomBaseProperties) :<br/>
 	 * <ul>
-	 * <li>Prend en paramètre une BundleManquantRunTimeException
-	 * , ajoute des lignes aux rapports développeurs et utilisateurs
-	 * , logge fatal et jette une Exception 
-	 * typée BundleManquantRunTimeException.</li>
-	 * <li>crée une ligne dans le rapport de configuration csv.</li>
-	 * <li>ajoute cette ligne à 'rapportConfigutrationCsv'.</li>
-	 * <li>crée une ligne dans le rapport utilisateur csv.</li>
-	 * <li>ajoute cette ligne à 'rapportUtilisateurCsv'.</li>
-	 * <li>Jette une BundleManquantRunTimeException 
-	 * qui encapsule pBundleManquantExc.</li>
+	 * <li>Methode jetant une <b>CleNullRunTimeException</b> 
+	 * en cas d'absence de valeur associée à la clé d'un properties.</li>
+	 * <li>Rédige un message à l'attention des développers.</li>
+	 * <li>LOG.FATAL.</li>
+	 * <li>Ajoute le message au rapport de configuration 
+	 * rapportConfigurationCsv.</li>
+	 * <li>Ajoute le message utilisateur au rapport 
+	 * utilisateur rapportUtilisateurCsv.</li>
+	 * <li>Jette la CleNullRunTimeException encapsulant le message.</li>
 	 * </ul>
 	 *
-	 * @param pMethode : String : nom de la méthode appelante.<br/>
-	 * @param pNomBaseProperties : nom de base du properties comme 
-	 * 'application' pour application_fr_FR.properties.<br/>
-	 * @param pBundleManquantExc : BundleManquantRunTimeException.<br/>
+	 * @param pMethode
+	 * @param pCle
+	 * @param pNomBaseProperties
 	 * 
-	 * @throws BundleManquantRunTimeException
+	 * @throws CleNullRunTimeException : si la valeur 
+	 * n'est pas renseignée pour la clé dans le properties.<br/>
 	 */
-	private static void traiterBundleManquantRunTimeException(
+	private static void traiterCleVide(
 			final String pMethode
-				, final String pNomBaseProperties
-					, final BundleManquantRunTimeException pBundleManquantExc) 
-							throws BundleManquantRunTimeException {
+				, final String pCle
+					, final String pNomBaseProperties) 
+							throws CleNullRunTimeException {
 		
-		final String nomProperties 
-		= reconstituerNomProperties(
+		/* Rédige un message à l'attention des développers. */
+		final String messageValeurnull 
+		= CLASSE_CONFIGURATIONBUNDLESMANAGER 
+		+ SEPARATEUR_MOINS_AERE
+		+ pMethode
+		+ SEPARATEUR_MOINS_AERE
+		+ "Pas de valeur indiquée pour la clé '" 
+		+ pCle 
+		+ "' dans " 
+		+ reconstituerNomProperties(
 				pNomBaseProperties
-					, LocaleManager.getLocaleApplication());
-		
-		/* Création du message pour le rapport technique. */
-		messageIndividuelRapport 
-		= creerMessage(
-				pMethode
-					, nomProperties);
+				, LocaleManager.getLocaleApplication());
 		
 		/* LOG.FATAL. */
 		if (LOG.isFatalEnabled()) {
-			LOG.fatal(messageIndividuelRapport, pBundleManquantExc);
+			LOG.fatal(messageValeurnull);
 		}
 		
 		/* Rapport. */
-		/* Ajout du message au rapport de configuration. */
+		/* Ajoute le message au rapport de configuration 
+		 * rapportConfigurationCsv. */
 		ajouterMessageAuRapportConfigurationCsv(
-				messageIndividuelRapport);
+				messageValeurnull);
 		
-		/* Ajout du message au rapport utilisateur. */
+		/* Ajoute le message utilisateur au rapport 
+		 * utilisateur rapportUtilisateurCsv. */
 		ajouterMessageAuRapportUtilisateurCsv(
 				creerMessageUtilisateur(
-						messageIndividuelRapport));
+						messageValeurnull));
 		
-		/* Jette une BundleManquantRunTimeException 
-		 * si le properties est manquant. */
-		throw new BundleManquantRunTimeException(
-				messageIndividuelRapport, pBundleManquantExc);
+		final AbstractRunTimeTechnicalException excValeurNull 
+			= new CleNullRunTimeException(messageValeurnull);
 		
-	} // Fin de traiterBundleManquantRunTimeException(...).________________
+		/* Jette la CleNullRunTimeException encapsulant le message. */
+		throw excValeurNull;
+		
+	} // Fin de traiterCleVide(...)._______________________________________
+	
 
-
+		
+	/**
+	 * method traiterRepertoireDefectueux(
+	 * String pMethode
+	 * , String pPath) :<br/>
+	 * <ul>
+	 * <li>Methode jetant une <b>FichierInexistantRunTimeException</b> 
+	 * si le répertoire visé par pPath n'existe pas ou n'est 
+	 * pas un répertoire (fichier simple).</li>
+	 * <li>Rédige un message à l'attention des développers.</li>
+	 * <li>LOG.FATAL.</li>
+	 * <li>Ajoute le message au rapport de configuration 
+	 * rapportConfigurationCsv.</li>
+	 * <li>Ajoute le message utilisateur au rapport 
+	 * utilisateur rapportUtilisateurCsv.</li>
+	 * <li>Jette la FichierInexistantRunTimeException encapsulant le message.</li>
+	 * </ul>
+	 *
+	 * @param pMethode : String : méthode appelante.<br/>
+	 * @param pPath : String : chemin vers un répertoire
+	 * 
+	 * @throws FichierInexistantRunTimeException : si le 
+	 * répertoire est inexistant ou pas un répertoire.<br/>
+	 */
+	private static void traiterRepertoireDefectueux(
+			final String pMethode
+				, final String pPath) 
+						throws FichierInexistantRunTimeException {
+		
+		final Path path = Paths.get(pPath);
+		final boolean existRepertoire 
+			= Files.exists(path, LinkOption.NOFOLLOW_LINKS);
+		final boolean estRepertoire 
+			= Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS);
+		
+		if (!existRepertoire || !estRepertoire) {
+			
+			/* Rédige un message à l'attention des développers. */
+			final String messageRepInexistant 
+			= CLASSE_CONFIGURATIONBUNDLESMANAGER
+			+ SEPARATEUR_MOINS_AERE
+			+ pMethode
+			+ SEPARATEUR_MOINS_AERE
+			+ "Le répertoire '" 
+			+ pPath 
+			+ "' est inexistant ou n'est pas un répertoire";
+			
+			/* LOG.FATAL. */
+			if (LOG.isFatalEnabled()) {
+				LOG.fatal(messageRepInexistant);
+			}
+			
+			/* Rapport. */
+			/* Ajoute le message au rapport de configuration 
+			 * rapportConfigurationCsv. */
+			ajouterMessageAuRapportConfigurationCsv(
+					messageRepInexistant);
+			
+			/* Ajoute le message utilisateur au rapport 
+			 * utilisateur rapportUtilisateurCsv. */
+			ajouterMessageAuRapportUtilisateurCsv(
+					creerMessageUtilisateur(
+							messageRepInexistant));
+			
+			final AbstractRunTimeTechnicalException excRepInexistant 
+				= new FichierInexistantRunTimeException(
+						messageRepInexistant);
+			
+			/* Jette la FichierInexistantRunTimeException 
+			 * encapsulant le message.*/
+			throw excRepInexistant;
+							
+		}
+		
+	} // Fin de traiterRepertoireDefectueux(...).__________________________
+	
 
 } // FIN DE LA CLASSE ConfigurationBundlesManager.---------------------------

@@ -11,7 +11,7 @@ import levy.daniel.application.apptechnic.exceptions.technical.AbstractTechnical
 
 /**
  * class BundleManquantExceptionTest :<br/>
- * Classe de test des Exceptions de l'application.<br/>
+ * Classe de test des Exceptions Typées de l'application.<br/>
  * <br/>
  *
  * - Exemple d'utilisation :<br/>

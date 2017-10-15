@@ -17,13 +17,14 @@ import static org.junit.Assert.*;
 
 /**
  * class ComparatorRGTest :<br/>
- * .<br/>
+ * Test JUnit de la classe ComparatorRG.<br/>
  * <br/>
  *
  * - Exemple d'utilisation :<br/>
  *<br/>
  * 
  * - Mots-clé :<br/>
+ * afficherMapStringString(), <br/>
  * <br/>
  *
  * - Dépendances :<br/>
@@ -82,9 +83,12 @@ public class ComparatorRGTest {
 	
 	/**
 	 * method testExtraireNUmeroFin() :<br/>
-	 * .<br/>
-	 * <br/>
-	 * :  :  .<br/>
+	 * <ul>
+	 * Teste le ComparatorRG.
+	 * <li>garantit que le comparator trie en utilisant 
+	 * le numéro de RG.</li>
+	 * <li>test visuel.</li>
+	 * </ul>
 	 */
 	@Test
 	public void testCompare() {

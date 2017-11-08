@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 /**
  * class GestionnaireRGTest :<br/>
- * .<br/>
+ * Test JUnit de la Classe GestionnaireRG.<br/>
  * <br/>
  *
  * - Exemple d'utilisation :<br/>

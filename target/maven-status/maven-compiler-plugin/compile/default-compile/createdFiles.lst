@@ -45,6 +45,7 @@ levy\daniel\application\apptechnic\configurationmanagers\gestionnairesrg\metier\
 levy\daniel\application\apptechnic\configurationmanagers\IExportateurCsv.class
 levy\daniel\application\model\services\valideurs\IExportateurCsv.class
 levy\daniel\application\apptechnic\exceptions\technical\AbstractRunTimeTechnicalException.class
+levy\daniel\application\IConstantesApplicatives.class
 levy\daniel\application\apptechnic\exceptions\technical\impl\FichierVideRunTimeException.class
 levy\daniel\application\model\services\metier\meteo\YahooParser.class
 levy\daniel\application\model\services\valideurs\ComparatorLigneRG.class

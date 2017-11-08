@@ -81,10 +81,27 @@ public class YahooParser {
 
 	
 	/**
-	 * ELEMENT : String :<br/>
-	 * "ELEMENT : ".<br/>
+	 * NODE : String :<br/>
+	 * "NOEUD (balise ou attribut) : ".<br/>
 	 */
-	public static final String ELEMENT = "ELEMENT (Balise) : ";
+	public static final String NODE 
+		= "NOEUD (balise ou attribut) : ";
+	
+	
+	/**
+	 * ELEMENT : String :<br/>
+	 * "ELEMENT (Balise) : ".<br/>
+	 */
+	public static final String ELEMENT 
+		= "ELEMENT (Balise) : ";
+	
+	
+	/**
+	 * ATTRIBUT : String :<br/>
+	 * "ATTRIBUT".<br/>
+	 */
+	public static final String ATTRIBUT 
+		= "ATTRIBUT";
 	
 	
 	/**

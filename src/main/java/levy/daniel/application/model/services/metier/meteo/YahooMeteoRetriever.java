@@ -35,8 +35,13 @@ public final class YahooMeteoRetriever {
 	
 	/**
 	 * URL_QUERY_METEO_YAHOO : String :<br/>
-	 * URL de base du Web Service Météo de Yahoo.<br/>
-	 * "https://query.yahooapis.com/v1/public/yql?q=".<br/>
+	 * <ul>
+	 * <li>URL de base du Web Service Météo de Yahoo.</li>
+	 * <li>"https://query.yahooapis.com/v1/public/yql?q=".</li>
+	 * <li>La valeur du paramètre q est la requête YQL précisant 
+	 * le lieu pour lequel ont veut obtenir la météo ainsi que 
+	 * divers attributs.</li>
+	 * </ul>
 	 */
 	public static final String URL_QUERY_METEO_YAHOO 
 		= "https://query.yahooapis.com/v1/public/yql?q=";
@@ -77,6 +82,13 @@ public final class YahooMeteoRetriever {
 	 * where text='Sourdun, France') and u='c' 
 	 * limit 5 |sort(field='item.forecast.date', descending='false');</li>
 	 * </ul>
+	 * Lien vers le site Yahoo-Meteo : 
+	 * https://fr.news.yahoo.com/meteo/ puis 
+	 * sélectionner un autre lieu.<br/>
+	 * Lien vers le site pour Sourdun : 
+	 * https://fr.news.yahoo.com/meteo/france/%C3%AEle-de-france
+	 * /sourdun-12727383.<br/>
+	 * <br/>
 	 *
 	 * @param pVille : String : Ville pour la prévision météo.<br/>
 	 * @param pCountry : Country : Pays de la Ville pour la prévision.<br/>

@@ -12,7 +12,27 @@ import levy.daniel.application.model.services.valideurs.metier.meteo.Interrogati
 
 /**
  * class InterrogationMeteoService :<br/>
- * .<br/>
+ * <ul>
+ * <li>SERVICE CONCRET d'interrogation du Web Service météo de Yahoo.</li>
+ * <li>Un SERVICE d'interrogation du Web Service météo de Yahoo fait la même 
+ * chose que ce que l'on fait à la main en se connectant au 
+ * site web Meteo de Yahoo : <b>https://fr.news.yahoo.com/meteo/</b> 
+ * puis que l'on sélectionne un lieu.</li>
+ * </ul>
+ * <p>
+ * Lien vers le site Yahoo-Meteo : 
+ * <b>https://fr.news.yahoo.com/meteo/</b> puis 
+ * <b>sélectionner un autre lieu</b>.
+ * </p>
+ * <p>
+ * <img src="../../../../../../../../../../../javadoc/images/site_yahoo_meteo.png" 
+ * alt="Site Web de Yahoo Meteo" border="1" align="center"/>
+ * </p>
+ * <p>
+ * Lien direct vers le site pour Sourdun : 
+ * <b>https://fr.news.yahoo.com/meteo/france/%C3%AEle-de-france
+ * /sourdun-12727383</b>.<br/>
+ * </p>
  * <br/>
  *
  * - Exemple d'utilisation :<br/>

@@ -116,7 +116,7 @@ public class ConfigurationBundlesManagerTest {
 			assertTrue(
 					"bundleApplication1 doit être la même "
 					+ "instance que bundleApplication2"
-					, bundleApplication1 == bundleApplication2);   // NOPMD by dan on 02/10/17 23:15
+					, bundleApplication1 == bundleApplication2);    // NOPMD by daniel.levy on 04/10/17 08:49
 		}
 		catch (BundleManquantRunTimeException e) {
 			
@@ -212,7 +212,7 @@ public class ConfigurationBundlesManagerTest {
 			assertTrue(
 					"bundleRessourcesExternes1 doit être la même "
 					+ "instance que bundleRessourcesExternes2"
-					, bundleRessourcesExternes1 == bundleRessourcesExternes2);   // NOPMD by dan on 02/10/17 23:15
+					, bundleRessourcesExternes1 == bundleRessourcesExternes2);    // NOPMD by daniel.levy on 04/10/17 08:49
 		}
 		catch (BundleManquantRunTimeException e) {
 			
@@ -294,7 +294,7 @@ public class ConfigurationBundlesManagerTest {
 		assertTrue(
 				"bundleMessagesControle1 doit être la même "
 				+ "instance que bundleMessagesControle2"
-				, bundleMessagesControle1 == bundleMessagesControle2);   // NOPMD by dan on 02/10/17 23:16
+				, bundleMessagesControle1 == bundleMessagesControle2);    // NOPMD by daniel.levy on 04/10/17 08:49
 				
 		
 	} // Fin de testGetBundleMessagesControle().___________________________

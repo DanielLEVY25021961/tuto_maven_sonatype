@@ -118,7 +118,7 @@ public class ConfigurationApplicationManagerTest {
 			assertTrue(
 					"bundleApplication1 doit être la même "
 					+ "instance que bundleApplication2"
-					, bundleApplication1 == bundleApplication2);   // NOPMD by dan on 02/10/17 23:16
+					, bundleApplication1 == bundleApplication2);    // NOPMD by daniel.levy on 04/10/17 08:53
 			
 			/* Récupère le rapport de chargement de la configuration. */
 			final String rapportCsv 
@@ -228,7 +228,7 @@ public class ConfigurationApplicationManagerTest {
 			assertTrue(
 					"bundleRessourcesExternes1 doit être la même "
 					+ "instance que bundleRessourcesExternes2"
-					, bundleRessourcesExternes1 == bundleRessourcesExternes2);   // NOPMD by dan on 02/10/17 23:16
+					, bundleRessourcesExternes1 == bundleRessourcesExternes2);    // NOPMD by daniel.levy on 04/10/17 08:52
 			
 			/* Récupère le rapport de chargement de la configuration. */
 			final String rapportCsv 

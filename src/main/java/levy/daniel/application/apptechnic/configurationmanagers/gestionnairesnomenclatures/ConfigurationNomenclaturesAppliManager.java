@@ -246,8 +246,7 @@ public final class ConfigurationNomenclaturesAppliManager {
 	 * <li>stocké dans application.properties.</li>
 	 * <li>"D:/Donnees/eclipse/eclipseworkspace_neon/
 	 * tuto_maven_sonatype/ressources_externes/nomenclatures/utf8".</li>
-	 * <li>Clé = "application.repertoire.ressources
-	 * .nomenclatures.chemin.appli.utf8".</li>
+	 * <li>Clé = "ressourcesexternes.nomenclatures.utf8".</li>
 	 */
 	private static transient String cheminNomenclaturesAppliUtf8;
 	
@@ -396,7 +395,7 @@ public final class ConfigurationNomenclaturesAppliManager {
 	 * ressources_externes/nomenclatures/utf8".<br/>
 	 * <ol>
 	 * <li>Essaie de fournir la valeur stockée dans 
-	 * application_fr_FR.properties.</li>
+	 * configuration_resources_externes.properties.</li>
 	 * <li>Sinon, retourne la valeur stockée en dur 
 	 * fournie par fournirCheminNomenclaturesAppliUtf8EnDur().</li>
 	 * <li>Nettoie la valeur lue dans le .properties avec trim().</li>
@@ -414,6 +413,7 @@ public final class ConfigurationNomenclaturesAppliManager {
 	 * <br/>
 	 *
 	 * @return cheminNomenclaturesAppliUtf8 : String.<br/>
+	 * 
 	 * @throws Exception 
 	 */
 	public static String getCheminNomenclaturesAppliUtf8() throws Exception {
@@ -426,8 +426,11 @@ public final class ConfigurationNomenclaturesAppliManager {
 
 			if (cheminNomenclaturesAppliUtf8 == null) {
 
-				if (ConfigurationApplicationManager
-						.getBundleApplication() != null) {
+				final ResourceBundle bundleRessourcesExternes 
+					= ConfigurationApplicationManager
+						.getBundleRessourcesExternes();
+				
+				if (bundleRessourcesExternes != null) {
 
 					try {
 
@@ -435,8 +438,7 @@ public final class ConfigurationNomenclaturesAppliManager {
 						 * Essaie de récupérer la valeur dans le properties.
 						 */
 						final String valeur 
-							= ConfigurationApplicationManager
-								.getBundleApplication()
+							= bundleRessourcesExternes
 									.getString(
 										fournirCleCheminNomenclaturesAppliUtf8());
 
@@ -448,8 +450,7 @@ public final class ConfigurationNomenclaturesAppliManager {
 							= creerMessageManqueValeur(
 								METHODE_GET_CHEMIN_NOMENCLATURES_APPLI,
 								fournirCleCheminNomenclaturesAppliUtf8(),
-								ConfigurationApplicationManager
-										.getBundleApplication());
+								bundleRessourcesExternes);
 
 							/* LOG.ERROR. */
 							if (LOG.isErrorEnabled()) {
@@ -469,6 +470,7 @@ public final class ConfigurationNomenclaturesAppliManager {
 						/* Valeur remplie dans le properties. */
 						else {
 
+							final String pathRepRessourcesExternes = bundleRessourcesExternes.
 							/*
 							 * Nettoie la valeur lue dans le .properties avec
 							 * trim().

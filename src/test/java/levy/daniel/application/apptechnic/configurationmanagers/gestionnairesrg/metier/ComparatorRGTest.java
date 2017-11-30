@@ -64,7 +64,8 @@ public class ComparatorRGTest {
 	 * LOG : Log : 
 	 * Logger pour Log4j (utilisant commons-logging).
 	 */
-	private static final Log LOG = LogFactory.getLog(ComparatorRGTest.class);
+	private static final Log LOG 
+		= LogFactory.getLog(ComparatorRGTest.class);
 
 
 	// *************************METHODES************************************/
